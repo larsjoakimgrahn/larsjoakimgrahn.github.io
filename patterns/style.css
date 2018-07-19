@@ -1,0 +1,37 @@
+.content, .container {
+    max-height: 90%;
+    margin-left: 8%;
+    margin-right: 8%;
+    max-width: 90%;
+}
+
+.content p {
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    font-family: 'Inconsolata', monospace;
+}
+
+.main-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.email {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-style: oblique;
+}
+
+@media screen and (orientation: portrait) {
+    .content, .container {
+        max-width: 90%;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    .content, .container {
+        max-height: 90%;
+    }
+}
