@@ -5,11 +5,23 @@
     max-width: 90%;
 }
 
+.grid-parent {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 10px;
+    max-width: 90%;
+}
+
 .content p {
     background-color: white;
     margin: 10px;
     padding: 10px;
     font-family: 'Inconsolata', monospace;
+}
+
+.nice-font {
+    font-family: 'Inconsolata', monospace;
+    text-decoration: none;
 }
 
 .main-image {
