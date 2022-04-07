@@ -1,15 +1,152 @@
-html, body, .container {
+html,
+body,
+section {
     height: 100%;
-    margin:0px;
-    padding:0px;
+    margin: 0px;
+    padding: 0px;
     font-family: 'Roboto', sans-serif;
-    -webkit-text-stroke: 1px white;
+    scroll-behavior: smooth;
 }
-.container {
+
+h1 {
+    display: inline-block;
+}
+
+section {
+    position: relative;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#section01 {
+    background-color: #FBF8CC;
+}
+
+#section02 {
+    background-color: white;
+}
+
+#section03 {
+    background-color: #eeeded;
+}
+
+#section04 {
+    background-color: #6fc385;
+}
+
+#section05 {
+    background-color: #1ea8cd;
+}
+
+#section05 {
+    background-color: #1ea8cd;
+}
+
+#section06 {
+    background-color: #000;
+}
+
+.name {
+    position: relative;
+    top: 5vh;
+    font-size: 14vmin;
+}
+
+.first-name {
+    color: #FFCFD2;
+}
+
+.last-name {
+    color: #FDE4CF;
+}
+
+.university {
+    font-size: 5vmin;
+}
+
+.university1 {
+    color: #A3C4F3;
+}
+
+.university2 {
+    position: relative;
+    color: #CFBAF0;
+}
+
+.polystar {
+    font-size: 8vmin;
+}
+
+.polystar1 {
+    color: #f19001;
+}
+
+.polystar2 {
+    position: relative;
+    color: #bcbcbc;
+}
+
+.looklet {
+    font-size: 8vmin;
+    color: white;
+}
+
+.qapital {
+    font-size: 8vmin;
+    color: #fedc79;
+}
+
+.contact {
+    font-size: 8vmin;
+    color: #fedc79;
+}
+
+.bread {
+    width: 70vw;
+    font-size: 3vmin;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.year {
+    margin: 2vh;
+    font-size: 3vmin;
+}
+
+.bottom-aligned {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    margin-bottom: 5vh;
+}
+
+.arrow-container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.fancy-huge-text {
-    font-size:1000%;color:transparent;
+
+.arrow-pretext {
+    font-size: 2vh;
+}
+
+.arrow {
+    box-sizing: border-box;
+    height: 2vw;
+    width: 2vw;
+    border-style: solid;
+    border-color: black;
+    border-width: 0px 1px 1px 0px;
+    transform: rotate(45deg);
+    transition: border-width 150ms ease-in-out;
+}
+
+.arrow:hover {
+    border-bottom-width: 4px;
+    border-right-width: 4px;
 }
