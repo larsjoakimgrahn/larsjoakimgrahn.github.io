@@ -26,3 +26,21 @@ a:hover {
 .red {
     color: red;
 }
+
+li {
+    padding-left: 1ch;
+}
+
+h2 {
+    color: #0E6FC9
+}
+
+.quests li::marker {
+    content: ">";
+    color: #D2228C
+}
+
+.links li::marker {
+    content: "-";
+    color: #0E6FC9
+}
