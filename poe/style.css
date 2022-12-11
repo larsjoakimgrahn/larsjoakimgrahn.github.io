@@ -1,0 +1,13 @@
+body {
+    background-color: #333;
+    color: #ddd
+}
+
+section {
+    display: grid;
+    grid-template-columns: 1fr 1fr
+}
+
+.quests {}
+
+.links {}
