@@ -8,6 +8,9 @@ section {
     grid-template-columns: 1fr 1fr
 }
 
-.quests {}
-
-.links {}
+a:visited,
+a:active,
+a:link,
+a:hover {
+    color: #ccc;
+}
