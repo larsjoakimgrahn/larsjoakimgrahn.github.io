@@ -25,6 +25,56 @@
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
         }
 
+        [data-theme="dark"] {
+            --tokyo: #60A5FA;
+            --osaka: #FB923C;
+            --kyoto: #A78BFA;
+            --travel: #9CA3AF;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --text: #F1F5F9;
+            --text-light: #94A3B8;
+            --border: #334155;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="dark"] .day.tokyo { background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 100%); color: #93C5FD; }
+        [data-theme="dark"] .day.osaka { background: linear-gradient(135deg, #7C2D12 0%, #9A3412 100%); color: #FDBA74; }
+        [data-theme="dark"] .day.kyoto { background: linear-gradient(135deg, #4C1D95 0%, #5B21B6 100%); color: #C4B5FD; }
+        [data-theme="dark"] .day.travel { background: linear-gradient(135deg, #374151 0%, #4B5563 100%); color: #D1D5DB; }
+
+        [data-theme="dark"] .detail-city.tokyo { background: #1E3A5F; color: #93C5FD; }
+        [data-theme="dark"] .detail-city.osaka { background: #7C2D12; color: #FDBA74; }
+        [data-theme="dark"] .detail-city.kyoto { background: #4C1D95; color: #C4B5FD; }
+        [data-theme="dark"] .detail-city.travel { background: #374151; color: #D1D5DB; }
+
+        [data-theme="dark"] .day.selected {
+            border-color: #60A5FA;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+        }
+
+        [data-theme="dark"] .day-city {
+            background: rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] .itinerary-item {
+            background: #334155;
+        }
+
+        [data-theme="dark"] .reorder-btn:hover {
+            background: #475569;
+        }
+
+        [data-theme="dark"] .add-item-input {
+            background: #334155;
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .add-item-input::placeholder {
+            color: var(--text-light);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: var(--bg);
@@ -51,6 +101,12 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
 
         h1 {
@@ -87,6 +143,24 @@
 
         .share-btn.copied {
             background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .theme-toggle {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.625rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg);
+            transform: translateY(-1px);
         }
 
         .container {
@@ -262,6 +336,22 @@
             opacity: 0.5;
             font-style: italic;
             margin-top: 0.5rem;
+        }
+
+        .day-weekday {
+            display: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .day-weekday {
+                display: block;
+            }
         }
 
         @media (max-width: 1200px) {
@@ -480,28 +570,43 @@
         }
 
         @media (max-width: 600px) {
+            .calendar-header-row {
+                display: none;
+            }
+
             .calendar {
-                gap: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
             }
 
             .day {
-                width: 100px;
-                height: 130px;
-                padding: 0.5rem;
-            }
-
-            .weekday {
-                width: 100px;
+                min-height: auto;
+                padding: 1rem;
+                width: 100%;
             }
 
             .day-number {
-                font-size: 1.125rem;
+                font-size: 1.25rem;
+            }
+
+            .day-city {
+                font-size: 0.75rem;
             }
 
             .day-items {
-                font-size: 0.6875rem;
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
             }
 
+            .day-empty {
+                margin-top: 0.5rem;
+            }
+
+            /* Hide empty placeholder days in mobile view */
+            .day[style*="visibility: hidden"] {
+                display: none;
+            }
         }
 
         .toast {
@@ -529,14 +634,29 @@
     <header>
         <div class="header-content">
             <h1>🇯🇵 Japan Trip Planner</h1>
-            <button class="share-btn" onclick="copyShareLink()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                    <polyline points="16 6 12 2 8 6"/>
-                    <line x1="12" y1="2" x2="12" y2="15"/>
-                </svg>
-                <span id="shareText">Share Trip</span>
-            </button>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                <button class="share-btn" onclick="copyShareLink()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <polyline points="16 6 12 2 8 6"/>
+                        <line x1="12" y1="2" x2="12" y2="15"/>
+                    </svg>
+                    <span id="shareText">Share Trip</span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -624,8 +744,49 @@
         let selectedDate = null;
         let saveTimeout = null;
 
+        // Theme management
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const theme = savedTheme || getSystemTheme();
+            document.documentElement.setAttribute('data-theme', theme);
+            updateThemeIcon(theme);
+
+            // Listen for system theme changes (only apply if user hasn't manually set)
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeIcon(newTheme);
+                }
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'dark') {
+                // Moon icon
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            } else {
+                // Sun icon
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+            }
+        }
+
         // Initialize
         function init() {
+            initTheme();
             loadFromURL();
             renderCalendar();
 
@@ -687,7 +848,9 @@
                 dayEl.dataset.date = date;
                 dayEl.onclick = () => selectDate(date);
 
-                const dayNum = new Date(date).getDate();
+                const dateObj = new Date(date);
+                const dayNum = dateObj.getDate();
+                const weekdayName = WEEKDAYS[(dateObj.getDay() + 6) % 7];
                 const items = itineraryData[date] || [];
 
                 let itemsHtml;
@@ -704,6 +867,7 @@
                         <span class="day-number">${dayNum}</span>
                         <span class="day-city">${info.cityName}</span>
                     </div>
+                    <div class="day-weekday">${weekdayName}</div>
                     ${itemsHtml}
                 `;
 
