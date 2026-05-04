@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Japan Trip Planner — May 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -689,14 +689,31 @@
 
         /* Mobile Responsive */
         @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
             .detail-panel {
                 position: static;
+                width: 100%;
             }
         }
 
         @media (max-width: 768px) {
+            :root {
+                --space-lg: 1.25rem;
+                --space-xl: 1.75rem;
+                --space-2xl: 2.5rem;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
             .calendar-grid {
                 grid-template-columns: 1fr;
+                gap: var(--space-md);
             }
 
             .weekday-header {
@@ -707,38 +724,36 @@
                 aspect-ratio: auto;
                 min-height: auto;
                 padding: var(--space-md);
-            }
-
-            .day-header {
-                flex-direction: row;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                grid-template-rows: auto auto;
+                gap: var(--space-xs) var(--space-md);
                 align-items: center;
             }
 
-            .container {
-                padding: var(--space-lg);
-            }
-
-            header {
-                padding: var(--space-lg);
-            }
-
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            /* Hide empty placeholder days in mobile view */
-            .day[style*="visibility: hidden"] {
+            .day::before {
                 display: none;
             }
-        }
 
-        /* Hidden mobile weekday display */
-        .day-weekday {
-            display: none;
-        }
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+                margin-bottom: 0;
+                grid-column: 1;
+                grid-row: 1 / -1;
+            }
 
-        @media (max-width: 768px) {
+            .day-number {
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+
+            .day-city {
+                font-size: 0.5rem;
+                padding: 1px 4px;
+            }
+
             .day-weekday {
                 display: block;
                 font-family: var(--font-mono);
@@ -746,8 +761,167 @@
                 color: var(--text-dim);
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
-                margin-bottom: var(--space-xs);
+                grid-column: 2;
+                grid-row: 1;
+                margin-bottom: 0;
             }
+
+            .day-items {
+                grid-column: 2 / -1;
+                grid-row: 2;
+                font-size: 0.875rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-xs);
+                overflow: visible;
+            }
+
+            .day-item {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                background: rgba(0,0,0,0.2);
+                padding: 2px 8px;
+                border-radius: var(--radius-sm);
+                font-size: 0.75rem;
+            }
+
+            .day-empty {
+                margin-top: 0;
+                font-size: 0.75rem;
+            }
+
+            .container {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            header {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: var(--space-md);
+            }
+
+            .brand {
+                text-align: center;
+            }
+
+            h1 {
+                font-size: clamp(1.5rem, 6vw, 2rem);
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            .btn {
+                padding: var(--space-sm) var(--space-md);
+                font-size: 0.8125rem;
+                flex: 1;
+                max-width: 140px;
+                justify-content: center;
+            }
+
+            /* Hide empty placeholder days in mobile view */
+            .day[style*="visibility: hidden"] {
+                display: none;
+            }
+
+            /* Detail panel mobile improvements */
+            .detail-panel {
+                padding: var(--space-lg);
+            }
+
+            .detail-date {
+                font-size: 2.5rem;
+            }
+
+            .itinerary-item {
+                padding: var(--space-md);
+                gap: var(--space-md);
+            }
+
+            .itinerary-item-text {
+                font-size: 1rem;
+            }
+
+            .add-item-form {
+                flex-direction: column;
+            }
+
+            .add-item-input {
+                font-size: 16px;
+                padding: var(--space-md);
+            }
+
+            .add-btn {
+                width: 100%;
+                padding: var(--space-md);
+            }
+
+            /* Drag handle hidden on mobile (touch doesn't need it) */
+            .drag-handle {
+                display: none;
+            }
+
+            /* Legend improvements */
+            .legend {
+                justify-content: center;
+                gap: var(--space-md) var(--space-lg);
+                margin-bottom: var(--space-xl);
+                padding-bottom: var(--space-lg);
+            }
+
+            .legend-item {
+                font-size: 0.625rem;
+            }
+
+            /* Toast positioning */
+            .toast {
+                left: var(--space-md);
+                right: var(--space-md);
+                transform: translateY(100px);
+                text-align: center;
+            }
+
+            .toast.show {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .day {
+                grid-template-columns: 50px 1fr;
+            }
+
+            .day-items {
+                grid-column: 2;
+            }
+
+            .day-city {
+                display: none;
+            }
+
+            .legend {
+                gap: var(--space-sm);
+            }
+
+            .legend-item {
+                font-size: 0.5625rem;
+            }
+
+            .legend-marker {
+                width: 6px;
+                height: 6px;
+            }
+        }
+
+        /* Day weekday hidden by default, shown in mobile */
+        .day-weekday {
+            display: none;
         }
     </style>
 </head>
@@ -756,7 +930,7 @@
         <div class="header-content">
             <div class="brand">
                 <div class="brand-kanji">旅行計画</div>
-                <h1>Japan Trip Planner</h1>
+                <h1>Japan 2026</h1>
                 <div class="trip-meta">May 14 — 24, 2026</div>
             </div>
             <div class="header-actions">
@@ -836,7 +1010,7 @@
                     <!-- Items will be generated by JS -->
                 </ul>
                 <form class="add-item-form" id="addItemForm" onsubmit="addItem(event)" style="display: none;">
-                    <input type="text" class="add-item-input" id="itemInput" placeholder="Add activity..." maxlength="200">
+                    <input type="text" class="add-item-input" id="itemInput" placeholder="Add activity..." maxlength="200" autocomplete="off" autocapitalize="sentences" enterkeyhint="done">
                     <button type="submit" class="add-btn">Add</button>
                 </form>
             </div>
@@ -1009,8 +1183,8 @@
             }
 
             list.innerHTML = items.map((item, index) => `
-                <li class="itinerary-item" draggable="true" data-index="${index}">
-                    <div class="drag-handle">
+                <li class="itinerary-item" ${isTouchDevice() ? '' : 'draggable="true"'} data-index="${index}">
+                    ${isTouchDevice() ? '' : `<div class="drag-handle">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="9" cy="6" r="1.5"/>
                             <circle cx="9" cy="12" r="1.5"/>
@@ -1019,7 +1193,7 @@
                             <circle cx="15" cy="12" r="1.5"/>
                             <circle cx="15" cy="18" r="1.5"/>
                         </svg>
-                    </div>
+                    </div>`}
                     <span class="itinerary-item-text">${escapeHtml(item)}</span>
                     <button class="delete-btn" onclick="deleteItem('${date}', ${index})" aria-label="Delete item">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1069,8 +1243,15 @@
             }
         }
 
-        // Setup drag and drop
+        // Detect touch device
+        function isTouchDevice() {
+            return window.matchMedia('(pointer: coarse)').matches;
+        }
+
+        // Setup drag and drop (disabled on touch devices)
         function setupDragAndDrop(date) {
+            if (isTouchDevice()) return; // Skip drag-and-drop on touch devices
+
             const list = document.getElementById('itineraryList');
             const items = list.querySelectorAll('.itinerary-item');
 
