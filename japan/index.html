@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Trip Planner - May 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --tokyo: #3B82F6;
+            --osaka: #F97316;
+            --kyoto: #8B5CF6;
+            --travel: #6B7280;
+            --bg: #F9FAFB;
+            --card: #FFFFFF;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --border: #E5E7EB;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .share-btn:active {
+            transform: translateY(0);
+        }
+
+        .share-btn.copied {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--card);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .legend-color.tokyo { background: var(--tokyo); }
+        .legend-color.osaka { background: var(--osaka); }
+        .legend-color.kyoto { background: var(--kyoto); }
+        .legend-color.travel { background: var(--travel); }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .calendar-section {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .detail-panel {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.25rem;
+            color: var(--text);
+        }
+
+        .calendar-header .month {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+        }
+
+        .calendar-header-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .weekday {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            padding: 0.5rem;
+        }
+
+        .day {
+            min-height: 180px;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+            padding: 0.75rem;
+            overflow: hidden;
+        }
+
+        .day:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .day.selected {
+            border-color: #1F2937;
+            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
+        }
+
+        .day.tokyo { background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); color: #1E40AF; }
+        .day.osaka { background: linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%); color: #9A3412; }
+        .day.kyoto { background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%); color: #5B21B6; }
+        .day.travel { background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%); color: #374151; }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .day-city {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.125rem 0.375rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 0.25rem;
+        }
+
+        .day-items {
+            flex: 1;
+            overflow: hidden;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .day-item {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .day-item:last-child {
+            border-bottom: none;
+        }
+
+        .day-empty {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .day {
+                min-height: 160px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .day {
+                min-height: 150px;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .calendar, .calendar-header-row {
+                gap: 0.5rem;
+            }
+
+            .day {
+                min-height: 110px;
+                padding: 0.5rem;
+            }
+
+            .day-number {
+                font-size: 1rem;
+            }
+
+            .day-city {
+                font-size: 0.5rem;
+            }
+
+            .day-items {
+                font-size: 0.6875rem;
+            }
+        }
+
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-date {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .detail-city {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-city.tokyo { background: #DBEAFE; color: #1E40AF; }
+        .detail-city.osaka { background: #FFEDD5; color: #9A3412; }
+        .detail-city.kyoto { background: #EDE9FE; color: #5B21B6; }
+        .detail-city.travel { background: #F3F4F6; color: #374151; }
+
+        .detail-weekday {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .itinerary-list {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .itinerary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            animation: slideIn 0.2s ease;
+            cursor: grab;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .itinerary-item:active {
+            cursor: grabbing;
+        }
+
+        .itinerary-item.dragging {
+            opacity: 0.5;
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-light);
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .reorder-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .reorder-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .reorder-btn:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .reorder-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .itinerary-item-text {
+            flex: 1;
+            word-break: break-word;
+            margin: 0 0.25rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .add-item-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .add-item-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 600px) {
+            .calendar {
+                gap: 0.5rem;
+            }
+
+            .day {
+                width: 100px;
+                height: 130px;
+                padding: 0.5rem;
+            }
+
+            .weekday {
+                width: 100px;
+            }
+
+            .day-number {
+                font-size: 1.125rem;
+            }
+
+            .day-items {
+                font-size: 0.6875rem;
+            }
+
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1F2937;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 300;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🇯🇵 Japan Trip Planner</h1>
+            <button class="share-btn" onclick="copyShareLink()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                    <polyline points="16 6 12 2 8 6"/>
+                    <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                <span id="shareText">Share Trip</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color tokyo"></div>
+                <span>Tokyo</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color osaka"></div>
+                <span>Osaka</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color kyoto"></div>
+                <span>Kyoto</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color travel"></div>
+                <span>Travel Day</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <div class="month">May 2026</div>
+                    <h2>Trip Calendar</h2>
+                </div>
+                <div class="calendar-header-row">
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                    <div class="weekday">Sun</div>
+                </div>
+                <div class="calendar" id="calendarGrid">
+                    <!-- Days will be generated by JS -->
+                </div>
+            </div>
+
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-header">
+                    <div>
+                        <div class="detail-date" id="detailDate">Select a day</div>
+                        <div class="detail-weekday" id="detailWeekday">Click a date to plan</div>
+                    </div>
+                    <span class="detail-city" id="detailCity" style="display: none;"></span>
+                </div>
+                <ul class="itinerary-list" id="itineraryList">
+                    <!-- Items will be generated by JS -->
+                </ul>
+                <form class="add-item-form" id="addItemForm" onsubmit="addItem(event)" style="display: none;">
+                    <input type="text" class="add-item-input" id="itemInput" placeholder="Add activity..." maxlength="200">
+                    <button type="submit" class="add-btn">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <script>
+        // Trip configuration
+        const TRIP_DATES = {
+            '2026-05-14': { city: 'travel', cityName: 'Travel Day' },
+            '2026-05-15': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-16': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-17': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-18': { city: 'osaka', cityName: 'Osaka' },
+            '2026-05-19': { city: 'osaka', cityName: 'Osaka' },
+            '2026-05-20': { city: 'kyoto', cityName: 'Kyoto' },
+            '2026-05-21': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-22': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-23': { city: 'tokyo', cityName: 'Tokyo' },
+            '2026-05-24': { city: 'travel', cityName: 'Travel Day' }
+        };
+
+        const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // State
+        let itineraryData = {};
+        let selectedDate = null;
+        let saveTimeout = null;
+
+        // Initialize
+        function init() {
+            loadFromURL();
+            renderCalendar();
+
+            // Select first day by default
+            const firstDate = Object.keys(TRIP_DATES)[0];
+            if (firstDate) {
+                selectDate(firstDate);
+            }
+        }
+
+        // Load data from URL hash
+        function loadFromURL() {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                try {
+                    const decoded = atob(hash);
+                    const parsed = JSON.parse(decoded);
+                    itineraryData = parsed;
+                } catch (e) {
+                    console.error('Failed to parse URL data:', e);
+                    itineraryData = {};
+                }
+            }
+        }
+
+        // Save data to URL hash (debounced)
+        function saveToURL() {
+            if (saveTimeout) {
+                clearTimeout(saveTimeout);
+            }
+            saveTimeout = setTimeout(() => {
+                const json = JSON.stringify(itineraryData);
+                const encoded = btoa(json);
+                window.history.replaceState(null, null, '#' + encoded);
+            }, 300);
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Calculate starting weekday for May 14, 2026 (Thursday = 4)
+            // With Monday-start week: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+            const firstDate = new Date('2026-05-14');
+            const startWeekday = (firstDate.getDay() + 6) % 7; // Convert Sun=0 to Sun=6
+
+            // Add empty placeholder days to align with weekday headers
+            for (let i = 0; i < startWeekday; i++) {
+                const emptyEl = document.createElement('div');
+                emptyEl.className = 'day';
+                emptyEl.style.visibility = 'hidden';
+                grid.appendChild(emptyEl);
+            }
+
+            Object.entries(TRIP_DATES).forEach(([date, info]) => {
+                const dayEl = document.createElement('div');
+                dayEl.className = `day ${info.city}`;
+                dayEl.dataset.date = date;
+                dayEl.onclick = () => selectDate(date);
+
+                const dayNum = new Date(date).getDate();
+                const items = itineraryData[date] || [];
+
+                let itemsHtml;
+                if (items.length === 0) {
+                    itemsHtml = '<div class="day-empty">No plans</div>';
+                } else {
+                    itemsHtml = '<div class="day-items">' +
+                        items.map(item => `<div class="day-item">${escapeHtml(item)}</div>`).join('') +
+                        '</div>';
+                }
+
+                dayEl.innerHTML = `
+                    <div class="day-header">
+                        <span class="day-number">${dayNum}</span>
+                        <span class="day-city">${info.cityName}</span>
+                    </div>
+                    ${itemsHtml}
+                `;
+
+                grid.appendChild(dayEl);
+            });
+        }
+
+        // Select a date
+        function selectDate(date) {
+            selectedDate = date;
+
+            // Update calendar selection
+            document.querySelectorAll('.day').forEach(day => {
+                day.classList.toggle('selected', day.dataset.date === date);
+            });
+
+            // Update detail panel
+            const info = TRIP_DATES[date];
+            const dateObj = new Date(date);
+
+            document.getElementById('detailDate').textContent = `May ${dateObj.getDate()}`;
+            document.getElementById('detailWeekday').textContent = WEEKDAYS[(dateObj.getDay() + 6) % 7];
+
+            const cityEl = document.getElementById('detailCity');
+            cityEl.textContent = info.cityName;
+            cityEl.className = `detail-city ${info.city}`;
+            cityEl.style.display = 'inline-block';
+
+            // Show form
+            document.getElementById('addItemForm').style.display = 'flex';
+
+            // Render items
+            renderItems(date);
+
+        }
+
+        // Render items for a date
+        function renderItems(date) {
+            const list = document.getElementById('itineraryList');
+            const items = itineraryData[date] || [];
+
+            if (items.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <p>No activities planned yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = items.map((item, index) => `
+                <li class="itinerary-item" draggable="true" data-index="${index}">
+                    <div class="drag-handle">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="6" r="1.5"/>
+                            <circle cx="9" cy="12" r="1.5"/>
+                            <circle cx="9" cy="18" r="1.5"/>
+                            <circle cx="15" cy="6" r="1.5"/>
+                            <circle cx="15" cy="12" r="1.5"/>
+                            <circle cx="15" cy="18" r="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="reorder-btns">
+                        <button class="reorder-btn" onclick="moveItem('${date}', ${index}, -1)" ${index === 0 ? 'disabled' : ''} aria-label="Move up">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18 15 12 9 6 15"/>
+                            </svg>
+                        </button>
+                        <button class="reorder-btn" onclick="moveItem('${date}', ${index}, 1)" ${index === items.length - 1 ? 'disabled' : ''} aria-label="Move down">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="itinerary-item-text">${escapeHtml(item)}</span>
+                    <button class="delete-btn" onclick="deleteItem('${date}', ${index})" aria-label="Delete item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </li>
+            `).join('');
+
+            // Setup drag and drop
+            setupDragAndDrop(date);
+        }
+
+        // Add item
+        function addItem(event) {
+            event.preventDefault();
+            if (!selectedDate) return;
+
+            const input = document.getElementById('itemInput');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            if (!itineraryData[selectedDate]) {
+                itineraryData[selectedDate] = [];
+            }
+
+            itineraryData[selectedDate].push(text);
+            input.value = '';
+
+            renderItems(selectedDate);
+            renderCalendar();
+            saveToURL();
+        }
+
+        // Delete item
+        function deleteItem(date, index) {
+            if (itineraryData[date]) {
+                itineraryData[date].splice(index, 1);
+                if (itineraryData[date].length === 0) {
+                    delete itineraryData[date];
+                }
+                renderItems(date);
+                renderCalendar();
+                saveToURL();
+            }
+        }
+
+        // Move item up or down
+        function moveItem(date, index, direction) {
+            if (!itineraryData[date]) return;
+
+            const items = itineraryData[date];
+            const newIndex = index + direction;
+
+            if (newIndex < 0 || newIndex >= items.length) return;
+
+            // Swap items
+            [items[index], items[newIndex]] = [items[newIndex], items[index]];
+
+            renderItems(date);
+            renderCalendar();
+            saveToURL();
+        }
+
+        // Setup drag and drop
+        function setupDragAndDrop(date) {
+            const list = document.getElementById('itineraryList');
+            const items = list.querySelectorAll('.itinerary-item');
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', item.dataset.index);
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    // Remove drag-over styling from all items
+                    items.forEach(i => i.style.transform = '');
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIndex = parseInt(item.dataset.index);
+
+                    if (fromIndex === toIndex) return;
+
+                    // Reorder items
+                    const dayItems = itineraryData[date];
+                    const [movedItem] = dayItems.splice(fromIndex, 1);
+                    dayItems.splice(toIndex, 0, movedItem);
+
+                    renderItems(date);
+                    renderCalendar();
+                    saveToURL();
+                });
+            });
+        }
+
+        // Copy share link
+        function copyShareLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const btn = document.querySelector('.share-btn');
+                const text = document.getElementById('shareText');
+
+                btn.classList.add('copied');
+                text.textContent = 'Copied!';
+
+                showToast('Link copied to clipboard!');
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    text.textContent = 'Share Trip';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('Failed to copy link');
+            });
+        }
+
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
